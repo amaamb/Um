@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Edit Your Profile</h1>
+<form action="" method="post" name="edit">
+    {{form.hidden_tag()}}
+    <table>
+      <tr>
+        <td>Your nickname</td>
+        <td>{{form.nickname(size=24}}</td>
+      </tr>
+      <tr>
+        <td>Your nickname</td>
+        <td>{{form.nickname(size=24}}</td>
+      </tr>
+      <tr>
+        <td>Your nickname</td>
+        <td>{{form.nickname(size=24}}</td>
+      </tr>
+    </table>
+</form>
+<hr>
+{% for post in posts %}
+    {% include 'post.html' %}
+{% endfor %}
+{% endblock %}
