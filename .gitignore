@@ -1,0 +1,6 @@
+*.pyc
+*.mo
+search.db/
+tmp/
+umapp.db
+ve/

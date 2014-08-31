@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Welcome, {{g.user.nickname}}!</h1>
-<form action="" method="post" name="post">
+<h1>{{ _('Welcome, %(nickname)s!', nickname=g.user.nickname) }}</h1>
+{% include "flash.html" %}
+<form class="form-horizontal" action="" method="post" name="post">
   {{form.hidden_tag()}}
   <table>
     <tr>
-      <td>Say something:</td>
+      <td>{{ _('Say something:') }}</td>
       <td>{{ form.post(size=30, maxlength=140) }} </td>
       <td>
       {% for error in form.errors.post %}
@@ -16,7 +17,7 @@
     </tr>
     <tr>
       <td></td>
-      <td><input type="submit" value="Post!"></td>
+      <td><input type="submit" value="{{ _('Post!') }}"></td>
       <td></td>
     </tr>
   </table>
@@ -24,6 +25,16 @@
 {% for post in posts.items %}
   {% include 'post.html' %}
 {% endfor %}
-{% if posts.has_prev %}<a href="{{url_for('index', page=posts.prev_num)}}"><< Newer posts</a>{% else %}<< Newer posts{% endif %} |
-{% if posts.has_next %}<a href="{{url_for('index', page=posts.next_num)}}">Older posts >></a>{% else %}Older posts >>{% endif %}
+<ul class="pager">
+  {% if posts.has_prev %}
+  <li class="previous"><a href="{{url_for('index', page=posts.prev_num)}}">{{ _('Newer posts') }}</a></li>
+  {% else %}
+  <li class="previous disabled"><a href="#">{{ _('Newer posts') }}</a></li>
+  {% endif %} |
+  {% if posts.has_next %}
+  <li class="next"><a href="{{url_for('index', page=posts.next_num)}}">{{ _('Older posts') }}</a></li>
+  {% else %}
+  <li class="next disabled"><a href="#">{{ _('Older posts') }}</a></li>
+{% endif %}
+</ul>
 {% endblock %}

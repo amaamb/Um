@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 
 #all imports
-from flask import render_template, flash, redirect, session, url_for, request, g
+from flask import render_template, flash, redirect, session, url_for, request, g, jsonify
 from flask.ext.login import login_user, logout_user, current_user, login_required
-from main import app, db, lm, oid
+from flask.ext.babel import gettext
+from main import app, db, lm, oid, babel
 from forms import LoginForm, EditForm, PostForm, SearchForm
 from models import User, ROLE_USER, ROLE_ADMIN, Post
 from datetime import datetime
-from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS
+from config import POSTS_PER_PAGE, MAX_SEARCH_RESULTS, LANGUAGES
 from emails import follower_notification
-
-#DB
+from translate import microsoft_translate
 
 #routes
 @app.route('/', methods=['GET', 'POST'])
@@ -44,13 +44,14 @@ def login():
 @oid.after_login
 def after_login(resp):
     if resp.email is None or resp.email=="":
-        flash ('Invalid Login. Please try again.')
-        return redirect(url_for('login'))
+        flash (gettext('Invalid Login. Please try again.'))
+        redirect(url_for('login'))
     user = User.query.filter_by(email=resp.email).first()
     if user is None:
         nickname = resp.nickname
         if nickname is None or nickname =="":
             nickname = resp.email.split('@')[0]
+        nickname = User.make_valid_nickname(nickname)
         nickname = User.make_unique_nickname(nickname)
         user = User(nickname = nickname, email = resp.email, role = ROLE_USER)
         db.session.add(user)
@@ -73,6 +74,7 @@ def before_request():
         db.session.add(g.user)
         db.session.commit()
         g.search_form = SearchForm()
+    g.locale = get_locale()
 
 @app.route('/user/<nickname>')
 @app.route('/user/<nickname>/<int:page>')
@@ -172,3 +174,16 @@ def logout():
 @lm.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(LANGUAGES.keys())
+
+@app.route('/translate', methods = ['POST'])
+@login_required
+def translate():
+    return jsonify({
+        'text': microsoft_translate(
+            request.form['text'],
+            request.form['sourceLang'],
+            request.form['destLand']) })

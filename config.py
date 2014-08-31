@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 #!/usr/bin/env python
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -24,3 +25,11 @@ ADMINS=['peppecomng@gmail.com','amachefe@outlook.com']
 POSTS_PER_PAGE=3
 WHOOSH_BASE=os.path.join(basedir, 'search.db')
 MAX_SEARCH_RESULTS=50
+
+# available language
+LANGUAGES = {
+    'en': 'English',
+    'es': 'Espanol'
+}
+MS_TRANSLATOR_CLIENT_ID = ''
+MS_TRANSLATOR_CLIENT_SECRET = ''
