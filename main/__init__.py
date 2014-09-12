@@ -48,3 +48,6 @@ if not app.debug:
 app.jinja_env.globals['momentjs']=momentjs
 
 from main import views, models
+
+if __name__ == "__main__":
+    app.run()

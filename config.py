@@ -5,7 +5,11 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 CSRF_ENABLED=True
 SECRET_KEY='development key'
-SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'umapp.db')
+#database config
+if os.environ.get('DATABASE_URL') is None:
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'umapp.db')
+else:
+    SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 OPENID_PROVIDERS = [
     { 'name': 'Google', 'url': 'https://www.google.com/accounts/o8/id'},
@@ -25,11 +29,13 @@ ADMINS=['peppecomng@gmail.com','amachefe@outlook.com']
 POSTS_PER_PAGE=3
 WHOOSH_BASE=os.path.join(basedir, 'search.db')
 MAX_SEARCH_RESULTS=50
-
 # available language
 LANGUAGES = {
     'en': 'English',
-    'es': 'Espanol'
+    'es': 'Espanol',
+    'pt': 'Portugese',
+    'sw': 'Swahili',
+    'zu': 'Zulu'
 }
 MS_TRANSLATOR_CLIENT_ID = ''
 MS_TRANSLATOR_CLIENT_SECRET = ''
